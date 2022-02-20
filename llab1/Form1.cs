@@ -35,9 +35,11 @@ namespace llab1
             gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
             gl.LoadIdentity();
 
-            float cosphi = (float) Math.Cos(angle);
-            float sinphi = (float) Math.Sin(angle);
+            float cosphi = (float)Math.Cos(angle);
+            float sinphi = (float)Math.Sin(angle);
             double[,] transform;
+            float[,] result;
+            float[,] temp = { { 1, 0, 0, 1 }, { 0, 1, 0, 0 }, { 0, 0, 1, 0 }, { 0, 0, 0, 1 } };
 
             mat4 transform1;
             if (axis == 0)
@@ -56,7 +58,8 @@ namespace llab1
                 transform1 = new mat4(new vec4(cosphi, sinphi, 0, 0), new vec4(-sinphi, cosphi, 0, 0), new vec4(0, 0, 1, 0), new vec4(0, 0, 0, 1));
             }
 
-            
+
+
         }
 
         private void x_btn_Click(object sender, EventArgs e)
@@ -159,6 +162,59 @@ namespace llab1
             gl.Flush();
 
             rquad -= 3.0f;
+        }
+
+        /// <summary>
+        /// ВНИМАНИЕ! Работает только для матриц размером 8х4 и 4х4.
+        /// </summary>
+        /// <param name="matrix">Матрица с координатами фигуры, которую необходимо умножить</param>
+        /// <param name="transformMatrix">Матрица преобразований</param>
+        /// <returns></returns>
+        private float[,] matrixMultiply(float[,] matrix, float[,] transformMatrix)
+        {
+            float[] temp = new float[32];
+            float[] input1, input2;
+
+            float[,] result = new float[8, 4];
+            int M = 8, N = 4;
+
+            //convert input to line array
+            input1 = new float[32];
+            for (int i = 0; i < M; ++i)
+            {
+                for (int j = 0; j < N; ++j)
+                {
+                    input1[i * N + j] = matrix[i, j];
+                }
+            }
+            input2 = new float[16];
+            for (int i = 0; i < N; ++i)
+            {
+                for (int j = 0; j < N; ++j)
+                {
+                    input2[i * N + j] = transformMatrix[i, j];
+                }
+            }
+
+            for (int i = 0; i < M; ++i)
+            {
+                for (int j = 0; j < N; ++j)
+                {
+                    temp[i * N + j] = 0;
+                    for (int k = 0; k < N; ++k)
+                        temp[i * N + j] += input1[i * N + k] * input2[k * N + j];
+                }
+            }
+
+            for (int i = 0; i < M; ++i)
+            {
+                for (int j = 0; j < N; ++j)
+                {
+                    result[i, j] = temp[i * N + j];
+                }
+            }
+
+            return result;
         }
     }
 }
