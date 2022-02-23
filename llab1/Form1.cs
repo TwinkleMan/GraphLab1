@@ -28,78 +28,6 @@ namespace llab1
             InitializeComponent();
         }
 
-        private void Draw()
-        {
-            gl = this.openglControl1.OpenGL;
-
-            gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
-            gl.LoadIdentity();
-
-            float cosphi = (float) Math.Cos(angle);
-            float sinphi = (float) Math.Sin(angle);
-            double[,] transform;
-
-            mat4 transform1;
-            if (axis == 0)
-            {
-                transform = new double[,] { { 1, 0, 0, 1 }, { 0, cosphi, sinphi, 0 }, { 0, -sinphi, cosphi, 0 }, { 0, 0, 0, 1 } };
-                transform1 = new mat4(new vec4(1, 0, 0, 1), new vec4(0, cosphi, sinphi, 0), new vec4(0, -sinphi, cosphi, 0), new vec4(0, 0, 0, 1));
-            }
-            if (axis == 1)
-            {
-                transform = new double[,] { { cosphi, 0, -sinphi, 0 }, { 0, 1, 0, 0 }, { sinphi, 0, cosphi, 0 }, { 0, 0, 0, 1 } };
-                transform1 = new mat4(new vec4(cosphi, 0, -sinphi, 0), new vec4(0, 1, 0, 0), new vec4(sinphi, 0, cosphi, 0), new vec4(0, 0, 0, 1));
-            }
-            if (axis == 2)
-            {
-                transform = new double[,] { { cosphi, sinphi, 0, 0 }, { -sinphi, cosphi, 0, 0 }, { 0, 0, 1, 0 }, { 0, 0, 0, 1 } };
-                transform1 = new mat4(new vec4(cosphi, sinphi, 0, 0), new vec4(-sinphi, cosphi, 0, 0), new vec4(0, 0, 1, 0), new vec4(0, 0, 0, 1));
-            }
-
-            
-        }
-
-        private void x_btn_Click(object sender, EventArgs e)
-        {
-            axis = 0;
-            y_btn.Enabled = false;
-            z_btn.Enabled = false;
-        }
-
-        private void y_btn_Click(object sender, EventArgs e)
-        {
-            axis = 1;
-            x_btn.Enabled = false;
-            z_btn.Enabled = false;
-        }
-
-        private void z_btn_Click(object sender, EventArgs e)
-        {
-            axis = 2;
-            x_btn.Enabled = false;
-            y_btn.Enabled = false;
-        }
-
-        private void draw_btn_Click(object sender, EventArgs e)
-        {
-            if (axis == -1) throw new Exception("Error! Rotation axis is not selected");
-            angle = float.Parse(angle_textbox.Text);
-            Draw();
-        }
-
-        private float[] getVertexCoords(float[,] figure, int row)
-        {
-            float[] coords = new float[4];
-
-            coords[0] = figure[row, 0];
-            coords[1] = figure[row, 1];
-            coords[2] = figure[row, 2];
-            coords[3] = figure[row, 3];
-
-            return coords;
-        }
-
-        float rquad = 0;
         private void openglControl1_OpenGLDraw(object sender, RenderEventArgs args)
         {
             gl = this.openglControl1.OpenGL;
@@ -109,18 +37,16 @@ namespace llab1
 
             gl.Translate(-0.4f, -0.3f, -4.0f);
 
-            gl.Rotate(rquad, 1.0f, 1.0f, 1.0f);
-
             gl.Begin(OpenGL.GL_QUADS);
 
-            //top, green    OK
+            //top, green
             gl.Color(0.0f, 1.0f, 0.0f);
             gl.Vertex(getVertexCoords(cube, 0));
             gl.Vertex(getVertexCoords(cube, 1));
             gl.Vertex(getVertexCoords(cube, 2));
             gl.Vertex(getVertexCoords(cube, 3));
 
-            //bottom, orange    OK
+            //bottom, orange
             gl.Color(1.0f, 0.5f, 0.0f);
             gl.Vertex(getVertexCoords(cube, 4));
             gl.Vertex(getVertexCoords(cube, 5));
@@ -157,8 +83,134 @@ namespace llab1
 
             gl.End();
             gl.Flush();
+        }
 
-            rquad -= 3.0f;
+        private void Draw()
+        {
+            gl = this.openglControl1.OpenGL;
+
+            gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
+            gl.LoadIdentity();
+
+            double angelRadians = angle * Math.PI / 180;
+
+            float cosphi = (float)Math.Cos(angelRadians);
+            float sinphi = (float)Math.Sin(angelRadians);
+            float[,] transform = null;
+            float[,] result;
+
+            if (axis == 0)
+            {
+                transform = new float[,] { { 1, 0, 0, 1 }, { 0, cosphi, sinphi, 0 }, { 0, -sinphi, cosphi, 0 }, { 0, 0, 0, 1 } };
+            }
+            if (axis == 1)
+            {
+                transform = new float[,] { { cosphi, 0, -sinphi, 0 }, { 0, 1, 0, 0 }, { sinphi, 0, cosphi, 0 }, { 0, 0, 0, 1 } };
+            }
+            if (axis == 2)
+            {
+                transform = new float[,] { { cosphi, sinphi, 0, 0 }, { -sinphi, cosphi, 0, 0 }, { 0, 0, 1, 0 }, { 0, 0, 0, 1 } };
+            }
+
+            cube = matrixMultiply(cube, transform);
+
+        }
+
+        private void x_btn_Click(object sender, EventArgs e)
+        {
+            axis = 0;
+            //y_btn.Enabled = false;
+            //z_btn.Enabled = false;
+        }
+
+        private void y_btn_Click(object sender, EventArgs e)
+        {
+            axis = 1;
+            //x_btn.Enabled = false;
+            //z_btn.Enabled = false;
+        }
+
+        private void z_btn_Click(object sender, EventArgs e)
+        {
+            axis = 2;
+            //x_btn.Enabled = false;
+            //y_btn.Enabled = false;
+        }
+
+        private void draw_btn_Click(object sender, EventArgs e)
+        {
+            if (axis == -1) throw new Exception("Error! Rotation axis is not selected");
+            angle = float.Parse(angle_textbox.Text);
+            Draw();
+        }
+
+        private float[] getVertexCoords(float[,] figure, int row)
+        {
+            float[] coords = new float[4];
+
+            coords[0] = figure[row, 0];
+            coords[1] = figure[row, 1];
+            coords[2] = figure[row, 2];
+            coords[3] = figure[row, 3];
+
+            return coords;
+        }
+
+        /// <summary>
+        /// ВНИМАНИЕ! Работает только для матриц размером 8х4 и 4х4.
+        /// </summary>
+        /// <param name="matrix">Матрица с координатами фигуры, которую необходимо умножить</param>
+        /// <param name="transformMatrix">Матрица преобразований</param>
+        /// <returns></returns>
+        private float[,] matrixMultiply(float[,] matrix, float[,] transformMatrix)
+        {
+            float[] temp = new float[32];
+            float[] input1, input2;
+
+            float[,] result = new float[8, 4];
+            int M = 8, N = 4;
+
+            //convert input to line array
+            input1 = new float[32];
+            for (int i = 0; i < M; ++i)
+            {
+                for (int j = 0; j < N; ++j)
+                {
+                    input1[i * N + j] = matrix[i, j];
+                }
+            }
+            input2 = new float[16];
+            for (int i = 0; i < N; ++i)
+            {
+                for (int j = 0; j < N; ++j)
+                {
+                    input2[i * N + j] = transformMatrix[i, j];
+                }
+            }
+
+            for (int i = 0; i < M; ++i)
+            {
+                for (int j = 0; j < N; ++j)
+                {
+                    temp[i * N + j] = 0;
+                    for (int k = 0; k < N; ++k)
+                        temp[i * N + j] += input1[i * N + k] * input2[k * N + j];
+                }
+            }
+
+            for (int i = 0; i < M; ++i)
+            {
+                for (int j = 0; j < N; ++j)
+                {
+                    result[i, j] = temp[i * N + j];
+                    if (j == 3)
+                    {
+                        result[i, j] = 1;
+                    }
+                }
+            }
+
+            return result;
         }
     }
 }
