@@ -30,6 +30,7 @@ namespace llab1
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.openglControl1 = new SharpGL.OpenGLControl();
             this.label1 = new System.Windows.Forms.Label();
             this.z_btn = new System.Windows.Forms.Button();
@@ -38,6 +39,9 @@ namespace llab1
             this.label2 = new System.Windows.Forms.Label();
             this.angle_textbox = new System.Windows.Forms.TextBox();
             this.draw_btn = new System.Windows.Forms.Button();
+            this.resetBtn = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.axisLbl = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.openglControl1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -119,11 +123,42 @@ namespace llab1
             this.draw_btn.UseVisualStyleBackColor = true;
             this.draw_btn.Click += new System.EventHandler(this.draw_btn_Click);
             // 
+            // resetBtn
+            // 
+            this.resetBtn.Location = new System.Drawing.Point(692, 108);
+            this.resetBtn.Name = "resetBtn";
+            this.resetBtn.Size = new System.Drawing.Size(113, 43);
+            this.resetBtn.TabIndex = 8;
+            this.resetBtn.Text = "Сброс";
+            this.resetBtn.UseVisualStyleBackColor = true;
+            this.resetBtn.Click += new System.EventHandler(this.resetBtn_Click);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(689, 217);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(76, 13);
+            this.label3.TabIndex = 9;
+            this.label3.Text = "Текущая ось:";
+            // 
+            // axisLbl
+            // 
+            this.axisLbl.AutoSize = true;
+            this.axisLbl.Location = new System.Drawing.Point(768, 217);
+            this.axisLbl.Name = "axisLbl";
+            this.axisLbl.Size = new System.Drawing.Size(13, 13);
+            this.axisLbl.TabIndex = 10;
+            this.axisLbl.Text = "0";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(815, 390);
+            this.Controls.Add(this.axisLbl);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.resetBtn);
             this.Controls.Add(this.draw_btn);
             this.Controls.Add(this.angle_textbox);
             this.Controls.Add(this.label2);
@@ -132,8 +167,9 @@ namespace llab1
             this.Controls.Add(this.y_btn);
             this.Controls.Add(this.x_btn);
             this.Controls.Add(this.openglControl1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Cube Rotate";
             ((System.ComponentModel.ISupportInitialize)(this.openglControl1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -150,5 +186,8 @@ namespace llab1
         private Label label2;
         private TextBox angle_textbox;
         private Button draw_btn;
+        private Button resetBtn;
+        private Label label3;
+        private Label axisLbl;
     }
 }

@@ -20,6 +20,7 @@ namespace llab1
         /// </summary>
         private int axis = -1;
         private float angle = 0;
+        readonly float[,] startCube = new float[,] { { 0, 1, 1, 1 }, { 0, 1, 0, 1 }, { 1, 1, 0, 1 }, { 1, 1, 1, 1 }, { 0, 0, 1, 1 }, { 0, 0, 0, 1 }, { 1, 0, 0, 1 }, { 1, 0, 1, 1 } };
         float[,] cube = new float[,] { { 0, 1, 1, 1 }, { 0, 1, 0, 1 }, { 1, 1, 0, 1 }, { 1, 1, 1, 1 }, { 0, 0, 1, 1 }, { 0, 0, 0, 1 }, { 1, 0, 0, 1 }, { 1, 0, 1, 1 } };
         OpenGL gl;
 
@@ -119,22 +120,19 @@ namespace llab1
         private void x_btn_Click(object sender, EventArgs e)
         {
             axis = 0;
-            //y_btn.Enabled = false;
-            //z_btn.Enabled = false;
+            axisLbl.Text = "X";
         }
 
         private void y_btn_Click(object sender, EventArgs e)
         {
             axis = 1;
-            //x_btn.Enabled = false;
-            //z_btn.Enabled = false;
+            axisLbl.Text = "Y";
         }
 
         private void z_btn_Click(object sender, EventArgs e)
         {
             axis = 2;
-            //x_btn.Enabled = false;
-            //y_btn.Enabled = false;
+            axisLbl.Text = "Z";
         }
 
         private void draw_btn_Click(object sender, EventArgs e)
@@ -211,6 +209,11 @@ namespace llab1
             }
 
             return result;
+        }
+
+        private void resetBtn_Click(object sender, EventArgs e)
+        {
+            cube = startCube;
         }
     }
 }
